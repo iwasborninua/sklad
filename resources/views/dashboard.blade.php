@@ -1,14 +1,12 @@
 @extends('layouts.dashboard')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-    <div class="col-md-3">
-        sidebar
-    </div>
-    <div class="col-md-9">
-        content
-    </div>
+        <div class="col-3">
+            
+        </div>
+        <div class="col-9">2</div>
     </div>
 </div>
 @endsection
