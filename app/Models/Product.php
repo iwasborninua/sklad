@@ -15,7 +15,7 @@ class Product extends Model
     public static function getActiveProducts($category_id = null, $manufacturer_id = null)
     {
         return self::query()
-            ->select('product_id', 'quantity', 'stock_status_id', 'manufacturer_id', 'category_id')
+            ->select('product_id', 'quantity', 'stock_status_id', 'manufacturer_id',)
             ->where('stock_status_id', 7)
             ->when($category_id, function ($query) use ($category_id) {
                 return $query->where('category_id', $category_id);
