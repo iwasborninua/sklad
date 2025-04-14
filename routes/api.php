@@ -17,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/products', function (Request $request) {
+    $category_id = $request->input('category_id');
+    $manufacturer_id = $request->input('manufacturer_id');
+
+
+    return App\Models\Product::getActiveProducts($category_id, $manufacturer_id);
+});

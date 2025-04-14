@@ -15,14 +15,17 @@ class Product extends Model
     public static function getActiveProducts($category_id = null, $manufacturer_id = null)
     {
         return self::query()
-            ->select('product_id', 'quantity', 'stock_status_id', 'manufacturer_id',)
+            ->select('quantity','identifier', 'name')
             ->where('stock_status_id', 7)
-            ->when($category_id, function ($query) use ($category_id) {
-                return $query->where('category_id', $category_id);
-            })
-            ->when($manufacturer_id, function ($query) use ($manufacturer_id) {
-                return $query->where('manufacturer_id', $manufacturer_id);
-            })
-            ->get();
+            ->join('oc_product_description', 'oc_product.product_id', '=', 'oc_product_description.product_id')
+            ->where('oc_product_description.language_id', 1)
+            // ->when($category_id, function ($query) use ($category_id) {
+            //     return $query->where('category_id', $category_id);
+            // })
+            // ->when($manufacturer_id, function ($query) use ($manufacturer_id) {
+            //     return $query->where('manufacturer_id', $manufacturer_id);
+            // })
+            ->get()
+            ->toArray();
     }
 }

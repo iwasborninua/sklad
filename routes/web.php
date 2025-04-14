@@ -23,13 +23,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $categories = App\Models\Category::getActiveCategories();
     $manufacturers = App\Models\Manufacturer::getActiveManufacturers();
-    $products = App\Models\Product::getActiveProducts();
-    
 
     return view('dashboard', [
         'categories' => $categories,
         'manufacturers' => $manufacturers,
-        'products' => $products,
     ]);
 })->name('dashboard');
 
