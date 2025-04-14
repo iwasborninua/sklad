@@ -63,6 +63,20 @@ return [
             ]) : [],
         ],
 
+        'es3' => [
+            'driver' => 'mysql',
+            'host' => env('DB_ES3_HOST', 'MySQL-8.0'),
+            'port' => env('DB_ES3_PORT', '3306'),
+            'database' => env('DB_ES3_DATABASE', 'es3'),
+            'username' => env('DB_ES3_USERNAME', 'root'),
+            'password' => env('DB_ES3_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

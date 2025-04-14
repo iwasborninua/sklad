@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,16 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $categories = App\Models\Category::getActiveCategories();
+    $manufacturers = App\Models\Manufacturer::getActiveManufacturers();
+    $products = App\Models\Product::getActiveProducts();
+    
+
+    return view('dashboard', [
+        'categories' => $categories,
+        'manufacturers' => $manufacturers,
+        'products' => $products,
+    ]);
 })->name('dashboard');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
