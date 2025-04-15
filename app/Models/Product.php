@@ -16,7 +16,7 @@ class Product extends Model
     {
         return self::query()
             ->select('quantity','identifier', 'name')
-            ->where('stock_status_id', 7)
+            //  ->where('stock_status_id', 7)
             ->join('oc_product_description', 'oc_product.product_id', '=', 'oc_product_description.product_id')
             ->where('oc_product_description.language_id', 1)
             // ->when($category_id, function ($query) use ($category_id) {
