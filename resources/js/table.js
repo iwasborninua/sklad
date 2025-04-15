@@ -19,8 +19,8 @@ var table = new Tabulator("#example-table", {
 });
 
 function changeTableData() {
-    let category_id = document.getElementById('category_dropdown').value == 'all' ? null : document.getElementById('category_dropdown').value;
-    let manufacturer_id = document.getElementById('manufacturer_dropdown').value == 'all' ? null : document.getElementById('manufacturer_dropdown').value;
+    let category_id = document.getElementById('category_dropdown').value;
+    let manufacturer_id = document.getElementById('manufacturer_dropdown').value;
 
     let url = '/api/products?category_id=' + category_id + '&manufacturer_id=' + manufacturer_id;
     fetch(url)

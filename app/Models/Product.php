@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPUnit\Framework\isNull;
+
 class Product extends Model
 {
     use HasFactory;
@@ -14,6 +16,9 @@ class Product extends Model
 
     public static function getActiveProducts($category_id = null, $manufacturer_id = null)
     {
+
+        $category_id = $category_id == 'all' ? null : $category_id;
+        $manufacturer_id = $manufacturer_id == 'all' ? null : $manufacturer_id;
         return self::query()
             ->select('quantity','identifier', 'name', 'category_id')
             //  ->where('stock_status_id', 7)
