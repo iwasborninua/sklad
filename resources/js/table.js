@@ -1,40 +1,67 @@
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 
+// Делаем Tabulator глобальным, если нужно в Blade
 window.Tabulator = Tabulator;
 
- let response = await fetch('/api/products');
- let data = await response.json();
+let table = null;
 
-//create Tabulator on DOM element with id "example-table"
-var table = new Tabulator("#example-table", {
-    data:data, //assign data to table
-    layout:"fitColumns", //fit columns to width of table (optional)
-    pagination:"local", //enable local pagination.
-    paginationSize:20, //allow 10 rows per page of data
-    columns:[ //Define Table Columns
-        {title:"Название",   field:"name", },
-        {title:"Количество", field:"quantity", width:150},
-        {title:"Идентификатор", field:"identifier", width:150},
-    ],
-});
+// Загружаем товары и создаём таблицу
+async function loadProducts() {
+    try {
+        const response = await fetch('/api/products');
+        const data = await response.json();
 
+        table = new Tabulator("#example-table", {
+            data: data,
+            layout: "fitColumns",
+            pagination: "local",
+            paginationSize: 20,
+            columns: [
+                { title: "Название", field: "name" },
+                { title: "Количество", field: "quantity", width: 150 },
+                { title: "Идентификатор", field: "identifier", width: 150 }
+            ]
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+    }
+}
+
+// Меняем данные таблицы при смене фильтров
 function changeTableData() {
-    let category_id = document.getElementById('category_dropdown').value;
-    let manufacturer_id = document.getElementById('manufacturer_dropdown').value;
+    const categoryElement = document.getElementById('category_dropdown');
+    const manufacturerElement = document.getElementById('manufacturer_dropdown');
 
-    let url = '/api/products?category_id=' + category_id + '&manufacturer_id=' + manufacturer_id;
+    if (!categoryElement || !manufacturerElement) return;
+
+    const category_id = categoryElement.value;
+    const manufacturer_id = manufacturerElement.value;
+
+    const url = `/api/products?category_id=${category_id}&manufacturer_id=${manufacturer_id}`;
+
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            table.setData(data);
+            if (table) {
+                table.setData(data);
+            }
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Ошибка при обновлении данных:', error));
 
-    console.log(category_id, manufacturer_id);
+    console.log('Выбраны:', category_id, manufacturer_id);
 }
 
-document.querySelectorAll('#category_dropdown, #manufacturer_dropdown').forEach(function (element) {
-    element.addEventListener('change', function () {
-        changeTableData();
+// Навешиваем события на селекты
+document.addEventListener('DOMContentLoaded', function () {
+    ['category_dropdown', 'manufacturer_dropdown'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', changeTableData);
+        }
     });
- });
+
+    // Загружаем таблицу при старте
+    loadProducts();
+});
+
+// Эта хуйня работает, отлично
