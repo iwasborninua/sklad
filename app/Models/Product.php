@@ -21,7 +21,7 @@ class Product extends Model
         $manufacturer_id = $manufacturer_id == 'all' ? null : $manufacturer_id;
 
         $query = self::query()
-            ->select('oc_product.product_id', 'quantity', 'identifier', 'name');
+            ->select('oc_product.product_id as id', 'quantity', 'identifier', 'name');
 
             if ($category_id) {
                 $query->leftJoin('oc_product_to_category', 'oc_product.product_id', '=', 'oc_product_to_category.product_id')

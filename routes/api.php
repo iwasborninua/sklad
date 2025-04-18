@@ -25,3 +25,5 @@ Route::get('/products', function (Request $request) {
 
     return App\Models\Product::getActiveProducts($category_id, $manufacturer_id);
 });
+
+

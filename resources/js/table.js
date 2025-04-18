@@ -11,17 +11,25 @@ async function loadProducts() {
         const response = await fetch('/api/products');
         const data = await response.json();
 
+        console.log('Данные получены:', data);
+        
         table = new Tabulator("#example-table", {
             data: data,
+            index: "id",
             layout: "fitColumns",
             pagination: "local",
             paginationSize: 20,
             columns: [
                 { title: "Название", field: "name" },
-                { title: "Количество", field: "quantity", width: 150 },
+                { title: "Количество", field: "quantity", width: 150, editor: "number" },
                 { title: "Идентификатор", field: "identifier", width: 150 }
-            ]
+            ],
+            cellEdited: function (cell) {
+                console.log('Ячейка отредактирована:', cell.getRow().getData());
+            }
         });
+
+        console.log('Таблица загружена:', table);
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
     }
@@ -60,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    console.log(table);
+
     // Загружаем таблицу при старте
     loadProducts();
 });
-
-// Эта хуйня работает, отлично
