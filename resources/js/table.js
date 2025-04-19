@@ -11,7 +11,6 @@ async function loadProducts() {
         const response = await fetch('/api/products');
         const data = await response.json();
 
-        console.log('Данные получены:', data);
         
         table = new Tabulator("#example-table", {
             data: data,
@@ -24,12 +23,34 @@ async function loadProducts() {
                 { title: "Количество", field: "quantity", width: 150, editor: "number" },
                 { title: "Идентификатор", field: "identifier", width: 150 }
             ],
-            cellEdited: function (cell) {
-                console.log('Ячейка отредактирована:', cell.getRow().getData());
-            }
         });
 
-        console.log('Таблица загружена:', table);
+        table.on("cellEdited", function (cell) {
+            const count = cell.getValue();
+            const identifier = cell.getData().identifier;
+
+            const url = `/api/product/${identifier}/${count}`;
+
+            if (!identifier) {
+                alert('Можно редактировать только товары с идентификатором!');
+                return;
+            }
+            
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    count: count,
+                    identifier: identifier,
+                }),
+            });
+
+        });
+
+        console.log('Таблица создана:', table);
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
     }
@@ -67,8 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
             element.addEventListener('change', changeTableData);
         }
     });
-
-    console.log(table);
 
     // Загружаем таблицу при старте
     loadProducts();

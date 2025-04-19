@@ -13,6 +13,8 @@ class Product extends Model
 
     protected $connection = 'es3';
     protected $table = 'oc_product';
+    protected $primaryKey = 'product_id';
+    public $timestamps = false;
 
     public static function getActiveProducts($category_id = null, $manufacturer_id = null)
     {

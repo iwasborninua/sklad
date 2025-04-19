@@ -26,4 +26,9 @@ Route::get('/products', function (Request $request) {
     return App\Models\Product::getActiveProducts($category_id, $manufacturer_id);
 });
 
+Route::put('/product/{identifier}/{count}', function (Request $request) {
+    $record = App\Models\Product::where('identifier', $request->route('identifier'))->first();
 
+    $record->quantity = $request->route('count');
+    $record->save();
+});
