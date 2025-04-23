@@ -77,6 +77,20 @@ return [
             'engine' => null,
         ],
 
+        'es2' => [
+            'driver' => 'mysql',
+            'host' => env('DB_ES2_HOST', ''),
+            'port' => env('DB_ES2_PORT', ''),
+            'database' => env('DB_ES2_DATABASE', ''),
+            'username' => env('DB_ES2_USERNAME', ''),
+            'password' => env('DB_ES2_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
