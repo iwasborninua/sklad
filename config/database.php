@@ -76,6 +76,19 @@ return [
             'strict' => true,
             'engine' => null,
         ],
+        'sunny' => [
+            'driver' => 'mysql',
+            'host' => env('DB_SUNNY_HOST', ),
+            'port' => env('DB_SUNNY_PORT', '3306'),
+            'database' => env('DB_SUNNY_DATABASE', 'es3'),
+            'username' => env('DB_SUNNY_USERNAME', 'root'),
+            'password' => env('DB_SUNNY_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
 
         'es2' => [
             'driver' => 'mysql',

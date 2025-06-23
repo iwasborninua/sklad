@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\SyncQuantityService\SyncQuantityFrom2;
 use App\SyncQuantityService\SyncQuantityFrom3;
+use App\SyncQuantityService\SyncQuantityFromSunny;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,5 +32,6 @@ class SyncQuantityJob implements ShouldQueue
 
         (new SyncQuantityFrom3())->sync($time);
         (new SyncQuantityFrom2())->sync($time);
+        (new SyncQuantityFromSunny())->sync($time);
     }
 }

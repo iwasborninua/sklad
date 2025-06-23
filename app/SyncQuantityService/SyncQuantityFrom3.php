@@ -17,9 +17,15 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
             ->whereNotNull('identifier')
             ->select(['identifier', 'quantity', 'updated_at'])
             ->get();
-        Log::info( count($data), ['-3']);
+
         foreach ($data as $product) {
             DB::connection('es2')
+                ->table('oc_product')
+                ->where('identifier', $product->identifier)
+                ->update(['quantity' => $product->quantity, 'updated_at' =>  Carbon::parse($product->updated_at)->subSeconds(15)]);
+        }
+        foreach ($data as $product) {
+            DB::connection('sunny')
                 ->table('oc_product')
                 ->where('identifier', $product->identifier)
                 ->update(['quantity' => $product->quantity, 'updated_at' =>  Carbon::parse($product->updated_at)->subSeconds(15)]);
