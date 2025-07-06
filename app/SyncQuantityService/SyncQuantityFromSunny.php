@@ -23,23 +23,27 @@ class SyncQuantityFromSunny implements SyncQuantityInterface
             ->get();
         foreach ($data as $product) {
             $product2 = Product::on('es2')->where('identifier', $product->identifier)->first();
-            $product2->update(['quantity' => $product->quantity, 'updated_at' => Carbon::parse($product->updated_at)->subSeconds(15)]);
+            $product2?->update(['quantity' => $product->quantity, 'updated_at' => Carbon::parse($product->updated_at)->subSeconds(15)]);
 
             $product3 = Product::on('es3')->where('identifier', $product->identifier)->first();
-            $product3->update(['quantity' => $product->quantity, 'updated_at' => Carbon::parse($product->updated_at)->subSeconds(15)]);
+            $product3?->update(['quantity' => $product->quantity, 'updated_at' => Carbon::parse($product->updated_at)->subSeconds(15)]);
 
-            foreach ($product->optionValues as $option){
-                OptionValues::on('es2')
-                    ->where('product_id', $product2->product_id)
-                    ->where('option_id', $option->option_id)
-                    ->where('option_value_id', $option->option_value_id)
-                    ->first()?->update(['quantity' => $option->quantity]);
+            foreach ($product->optionValues as $option) {
+                if ($product2) {
+                    OptionValues::on('es2')
+                        ->where('product_id', $product2->product_id)
+                        ->where('option_id', $option->option_id)
+                        ->where('option_value_id', $option->option_value_id)
+                        ->first()?->update(['quantity' => $option->quantity]);
+                }
 
-                OptionValues::on('es3')
-                    ->where('product_id', $product3->product_id)
-                    ->where('option_id', $option->option_id)
-                    ->where('option_value_id', $option->option_value_id)
-                    ->first()?->update(['quantity' => $option->quantity]);
+                if ($product3) {
+                    OptionValues::on('es3')
+                        ->where('product_id', $product3->product_id)
+                        ->where('option_id', $option->option_id)
+                        ->where('option_value_id', $option->option_value_id)
+                        ->first()?->update(['quantity' => $option->quantity]);
+                }
             }
 
         }
