@@ -33,13 +33,14 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
                     ->where('product_id', $product2->product_id)
                     ->where('option_id', $option->option_id)
                     ->where('option_value_id', $option->option_value_id)
-                    ->update(['quantity' => $option->quantity]);
+                    ->first()?->update(['quantity' => $option->quantity]);
+
 
                 OptionValues::on('es2')
                     ->where('product_id', $product3->product_id)
                     ->where('option_id', $option->option_id)
                     ->where('option_value_id', $option->option_value_id)
-                    ->update(['quantity' => $option->quantity]);
+                    ->first()?->update(['quantity' => $option->quantity]);
             }
 
         }
