@@ -44,9 +44,7 @@ class SyncQuantityFrom2 implements SyncQuantityInterface
                         ->where('option_value_id', $option->option_value_id)
                         ->first()?->update(['quantity' => $option->quantity]);
                 }
-
             }
-
         }
     }
 }

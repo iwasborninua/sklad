@@ -45,7 +45,6 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
                         ->first()?->update(['quantity' => $option->quantity]);
                 }
             }
-
         }
     }
 }
