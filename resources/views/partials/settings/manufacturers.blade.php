@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-secondary">Обновить производителей</button>
+<button id="update_manufacturers" type="button" class="btn btn-secondary">Обновить производителей</button>
 <div class="mt-3">
     <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">

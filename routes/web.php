@@ -20,14 +20,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    $categories = App\Models\Category::getActiveCategories();
-    $manufacturers = App\Models\Manufacturer::getActiveManufacturers();
-
-    return view('dashboard', [
-        'categories' => $categories,
-        'manufacturers' => $manufacturers,
-    ]);
-})->name('dashboard');
-
+Route::get('/dashboard', [\App\Http\Controllers\dashboard\DashboardController::class, 'dashboard'])->name('dashboard');
+Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::name('partial.')->prefix('partials')->group(function () {
+    Route::name('settings.')->prefix('settings')->group(function () {
+        Route::get('categories', function () {
+            return view('partials.settings.categories');
+        })->name('categories');
+
+        Route::get('manufacturers', function () {
+            return view('partials.settings.manufacturers');
+        })->name('manufacturers');
+    });
+});

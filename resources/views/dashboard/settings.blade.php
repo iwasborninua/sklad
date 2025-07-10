@@ -33,11 +33,9 @@
                 axios.get(url)
                     .then(function(response) {
                         document.getElementById('dynamic-setting-section').innerHTML = response.data;
-                        console.log('Settings loaded successfully:');
                     })
                     .catch(function(error) {
                         console.error('Error fetching settings:', error);
-                        alert('Произошла ошибка при загрузке настроек. Пожалуйста, попробуйте позже.');
                     });
             });
         });
