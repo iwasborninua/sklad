@@ -10,4 +10,10 @@ class CategorysSettings extends Model
     use HasFactory;
     public $timestamps = true;
     protected $table = 'categorys_settings';
+
+    protected $fillable = [
+        'category_id',
+        'name',
+        'active',
+    ];
 }

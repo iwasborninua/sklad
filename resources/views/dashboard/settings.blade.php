@@ -33,7 +33,44 @@
                 axios.get(url)
                     .then(function(response) {
                         document.getElementById('dynamic-setting-section').innerHTML = response.data;
+
+                        let manufacturers_btn = document.getElementById('update_manufacturers');
+                        if (manufacturers_btn != null) {
+                            manufacturers_btn.addEventListener('click', function () {
+                                axios.get('{{ route('settings.sync.manufacturers') }}')
+                                    .then(function(response) {
+                                        if (response.data.success) {
+                                            alert(response.data.message);
+                                        } else {
+                                            alert('Ошибка при синхронизации производителей: ' + response.data.message);
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Не вышло синхронизировать производителей', error);
+                                    });
+                            });
+                        }
+
+
+                        let categories_btn = document.getElementById('update_categories');
+
+                        if (categories_btn != null) {
+                            categories_btn.addEventListener('click', function () {
+                                axios.get('{{ route('settings.sync.categories') }}')
+                                    .then(function(response) {
+                                        if (response.data.success) {
+                                            alert(response.data.message);
+                                        } else {
+                                            alert('Ошибка при синхронизации категорий: ' + response.data.message);
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Не вышло синхронизировать категории', error);
+                                    });
+                            });
+                        }
                     })
+
                     .catch(function(error) {
                         console.error('Error fetching settings:', error);
                     });

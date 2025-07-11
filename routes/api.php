@@ -32,3 +32,10 @@ Route::put('/product/{identifier}/{count}', function (Request $request) {
     $record->quantity = $request->route('count');
     $record->save();
 });
+
+Route::name('settings.')->prefix('settings')->group(function () {
+    Route::name('sync.')->prefix('sync')->group(function () {
+        Route::get('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'syncManufacturers'])->name('manufacturers');
+        Route::get('categories', [\App\Http\Controllers\Api\SettingsController::class, 'syncCategories'])->name('categories');
+    });
+});
