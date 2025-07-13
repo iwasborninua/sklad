@@ -26,11 +26,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::name('partial.')->prefix('partials')->group(function () {
     Route::name('settings.')->prefix('settings')->group(function () {
-        Route::get('categories', function () {
+        Route::post('categories', function () {
             return view('partials.settings.categories');
         })->name('categories');
 
-        Route::get('manufacturers', function () {
+        Route::post('manufacturers', function () {
             return view('partials.settings.manufacturers');
         })->name('manufacturers');
     });

@@ -37,7 +37,7 @@
                         let manufacturers_btn = document.getElementById('update_manufacturers');
                         if (manufacturers_btn != null) {
                             manufacturers_btn.addEventListener('click', function () {
-                                axios.get('{{ route('settings.sync.manufacturers') }}')
+                                axios.post('{{ route('settings.sync.manufacturers') }}')
                                     .then(function(response) {
                                         if (response.data.success) {
                                             alert(response.data.message);
@@ -56,7 +56,7 @@
 
                         if (categories_btn != null) {
                             categories_btn.addEventListener('click', function () {
-                                axios.get('{{ route('settings.sync.categories') }}')
+                                axios.post('{{ route('settings.sync.categories') }}')
                                     .then(function(response) {
                                         if (response.data.success) {
                                             alert(response.data.message);
