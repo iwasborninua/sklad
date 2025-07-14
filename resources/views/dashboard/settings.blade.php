@@ -36,6 +36,7 @@
 
                         let manufacturers_btn = document.getElementById('update_manufacturers');
                         if (manufacturers_btn != null) {
+                            updateNanufacturersSettings();
                             manufacturers_btn.addEventListener('click', function () {
                                 axios.post('{{ route('settings.sync.manufacturers') }}')
                                     .then(function(response) {
@@ -51,10 +52,12 @@
                             });
                         }
 
-
                         let categories_btn = document.getElementById('update_categories');
 
                         if (categories_btn != null) {
+                            // Обновляем категории
+                            updateCategoriesSettings();
+
                             categories_btn.addEventListener('click', function () {
                                 axios.post('{{ route('settings.sync.categories') }}')
                                     .then(function(response) {

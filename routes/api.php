@@ -22,7 +22,6 @@ Route::get('/products', function (Request $request) {
     $category_id = $request->input('category_id');
     $manufacturer_id = $request->input('manufacturer_id');
 
-
     return App\Models\Product::getActiveProducts($category_id, $manufacturer_id);
 });
 
@@ -37,5 +36,10 @@ Route::name('settings.')->prefix('settings')->group(function () {
     Route::name('sync.')->prefix('sync')->group(function () {
         Route::get('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'syncManufacturers'])->name('manufacturers');
         Route::get('categories', [\App\Http\Controllers\Api\SettingsController::class, 'syncCategories'])->name('categories');
+    });
+
+    Route::name('update.')->prefix('update')->group(function () {
+        Route::post('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'updateManufacturers'])->name('manufacturers');
+        Route::post('categories', [\App\Http\Controllers\Api\SettingsController::class, 'updateCategories'])->name('categories');
     });
 });

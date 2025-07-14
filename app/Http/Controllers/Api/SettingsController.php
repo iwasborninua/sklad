@@ -67,4 +67,48 @@ class SettingsController extends Controller
         }
 
     }
+
+    public function updateManufacturers(Request $request)
+    {
+        $manufacturer = ManufacturersSettings::where('manufacturer_id', $request->input('manufacturer_id'))
+            ->first();
+
+        $manufacturer->active = (int)$request->input('active');
+
+        if (!$manufacturer) {
+            return response()->json(['message' => 'Производитель не найден'], 404);
+        }
+
+        if ($manufacturer->save()) {
+            return response()->json(['message' => 'Производитель обновлен успешно'], 200);
+        } else {
+            return response()->json(['message' => 'Ошибка при обновлении производителя'], 500);
+        }
+    }
+
+    public function updateCategories(Request $request)
+    {
+
+        $category = CategorysSettings::where('category_id', $request->input('category_id'))
+            ->first();
+
+        if (!$category) {
+            return response()->json([
+                'message' => 'Категория не найдена'
+            ], 404);
+        }
+
+        $category->active = (int)$request->input('active');
+
+
+        if (!$category) {
+            return response()->json(['message' => 'Категория не найдена'], 404);
+        }
+
+        if ($category->save()) {
+            return response()->json(['message' => 'Категория обновлена успешно'], 200);
+        } else {
+            return response()->json(['message' => 'Ошибка при обновлении категории'], 500);
+        }
+    }
 }

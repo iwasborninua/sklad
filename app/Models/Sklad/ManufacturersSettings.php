@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ManufacturersSettings extends Model
 {
     use HasFactory;
+
     public $timestamps = true;
     protected $table = 'manufacturers_settings';
     protected $fillable = [
@@ -15,4 +16,9 @@ class ManufacturersSettings extends Model
         'name',
         'active',
     ];
+
+    public static function getManufacturersSettingsList()
+    {
+        return self::select('id', 'manufacturer_id', 'name', 'active')->get();
+    }
 }

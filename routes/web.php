@@ -26,12 +26,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::name('partial.')->prefix('partials')->group(function () {
     Route::name('settings.')->prefix('settings')->group(function () {
-        Route::post('categories', function () {
-            return view('partials.settings.categories');
+        Route::get('categories', function () {
+            return view('partials.settings.categories', [
+                'categories' => \App\Models\Sklad\CategorysSettings::getCategorysSettingsList(),
+            ]);
         })->name('categories');
 
-        Route::post('manufacturers', function () {
-            return view('partials.settings.manufacturers');
+        Route::get('manufacturers', function () {
+            return view('partials.settings.manufacturers', [
+                'manufacturers' => \App\Models\Sklad\ManufacturersSettings::getManufacturersSettingsList(),
+            ]);
         })->name('manufacturers');
     });
 });
