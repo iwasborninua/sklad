@@ -8,7 +8,7 @@
             <select id="category_dropdown" class="form-select">
                 <option selected value="all">Все категории</option>
                 @foreach ($categories as $category)
-                    <option value="{{ $category->category_id }}">{{ $category->description->name }}</option>
+                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
 
