@@ -1,3 +1,9 @@
+@use "sass:color";
+
+$color: #c71585;
+@debug color.adjust($color, $lightness: 15%, $space: hsl);
+@debug color.adjust($color, $lightness: 15%, $space: oklch);
+@debug color.scale($color, $lightness: 15%, $space: oklch);
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
 

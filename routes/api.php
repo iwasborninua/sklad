@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,19 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/products', function (Request $request) {
-    $category_id = $request->input('category_id');
-    $manufacturer_id = $request->input('manufacturer_id');
-
-    return App\Models\Product::getActiveProducts($category_id, $manufacturer_id);
-});
-
-Route::put('/product/{identifier}/{count}', function (Request $request) {
-    $record = App\Models\Product::where('identifier', $request->route('identifier'))->first();
-
-    $record->quantity = $request->route('count');
-    $record->save();
-});
+Route::get('/products', [ProductController::class, 'list']);
+Route::put('/product/{identifier}/{count}', [ProductController::class, 'updateQuantity']);
+Route::get('/products-with-options', [ProductController::class, 'productsWithOptions']);
+Route::put('/products-with-options/{productOptionValueId}/{count}', [ProductController::class, 'updateOptionQuantity']);
 
 Route::name('settings.')->prefix('settings')->group(function () {
     Route::name('sync.')->prefix('sync')->group(function () {

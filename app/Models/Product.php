@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasRepo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRepo;
 
     protected $connection = 'es3';
     protected $table = 'oc_product';
@@ -41,8 +42,30 @@ class Product extends Model
         return $products;
     }
 
-    public function optionValues(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public static function productWithOptions()
     {
-        return $this->hasMany(OptionValues::class, 'product_id', 'product_id');
+        return self::query()->whereNotNull('identifier')
+            ->with(['description', 'productOptionValues.value.description', 'productOptionValues.value.option.description']);
+    }
+
+    public function options()
+    {
+        return $this->hasMany(ProductOption::class, 'product_id', 'product_id');
+    }
+
+    public function descriptions()
+    {
+        return $this->hasMany(ProductDescription::class, 'product_id', 'product_id');
+    }
+    public function description()
+    {
+        return $this->hasOne(ProductDescription::class, 'product_id', 'product_id')
+            ->where('language_id', config('constants.lang'));
+    }
+
+
+    public function productOptionValues(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ProductOptionValue::class, 'product_id', 'product_id');
     }
 }

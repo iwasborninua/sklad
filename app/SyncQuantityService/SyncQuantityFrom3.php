@@ -2,7 +2,7 @@
 
 namespace App\SyncQuantityService;
 
-use App\Models\OptionValues;
+use App\Models\ProductOptionValue;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
     public function sync($time)
     {
         $data = Product::on('es3')
-            ->with(['optionValues' => function ($q) {
+            ->with(['productOptionValues' => function ($q) {
                 return $q->select(['product_id', 'option_id', 'option_value_id', 'quantity']);
             }])
             ->where('updated_at', '>=', $time)
@@ -28,9 +28,9 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
             $product2 = Product::on('es2')->where('identifier', $product->identifier)->first();
             $product2?->update(['quantity' => $product->quantity, 'updated_at' => Carbon::parse($product->updated_at)->subSeconds(15)]);
 
-            foreach ($product->optionValues as $option) {
+            foreach ($product->productOptionValues as $option) {
                 if ($productSunny) {
-                    OptionValues::on('sunny')
+                    ProductOptionValue::on('sunny')
                         ->where('product_id', $productSunny->product_id)
                         ->where('option_id', $option->option_id)
                         ->where('option_value_id', $option->option_value_id)
@@ -38,7 +38,7 @@ class SyncQuantityFrom3 implements SyncQuantityInterface
                 }
 
                 if ($product2){
-                    OptionValues::on('es2')
+                    ProductOptionValue::on('es2')
                         ->where('product_id', $product2->product_id)
                         ->where('option_id', $option->option_id)
                         ->where('option_value_id', $option->option_value_id)
