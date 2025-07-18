@@ -48,8 +48,8 @@ Route::put('/products-with-options/{productOptionValueId}/{count}', [ProductCont
 
 Route::name('settings.')->prefix('settings')->group(function () {
     Route::name('sync.')->prefix('sync')->group(function () {
-        Route::get('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'syncManufacturers'])->name('manufacturers');
-        Route::get('categories', [\App\Http\Controllers\Api\SettingsController::class, 'syncCategories'])->name('categories');
+        Route::post('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'syncManufacturers'])->name('manufacturers');
+        Route::post('categories', [\App\Http\Controllers\Api\SettingsController::class, 'syncCategories'])->name('categories');
     });
 
     Route::name('update.')->prefix('update')->group(function () {

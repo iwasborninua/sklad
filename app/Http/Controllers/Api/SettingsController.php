@@ -14,18 +14,21 @@ class SettingsController extends Controller
 {
     public function syncManufacturers()
     {
+        // Получаем все manufacturer_id из ManufacturersSettings
+
         $settings_manufacturers = ManufacturersSettings::select('manufacturer_id')->get();
         $manufacturers_ids = $settings_manufacturers->pluck('manufacturer_id')->toArray();
 
-        $es2 = Manufacturer::select('manufacturer_id', 'name')
+        $manufacturers = Manufacturer::select('manufacturer_id', 'name')
             ->whereNotIn('manufacturer_id', $manufacturers_ids)
             ->get()
             ->toArray();
 
-        if (empty($es2)) {
+
+        if (empty($manufacturers)) {
             return response()->json(['message' => 'Нечего синхронизировать'], 200);
         } else {
-            foreach ($es2 as $manufacturer) {
+            foreach ($manufacturers as $manufacturer) {
                 ManufacturersSettings::create([
                     'manufacturer_id' => $manufacturer['manufacturer_id'],
                     'name' => $manufacturer['name'],
