@@ -60,7 +60,7 @@ class Product extends Model
     public function description()
     {
         return $this->hasOne(ProductDescription::class, 'product_id', 'product_id')
-            ->where('language_id', config('constants.lang'));
+            ->where('language_id', 1);
     }
 
 
