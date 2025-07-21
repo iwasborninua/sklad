@@ -31,16 +31,19 @@ async function getOptions(manufacturerId = null) {
 }
 
 async function getProducts(categoryId = null, manufacturerId = null) {
-
+    let url = null;
 
     const params = new URLSearchParams();
 
     if(categoryId) params.append('category_id', categoryId);
     if(manufacturerId) params.append('manufacturer_id', manufacturerId);
 
-    let url = `/api/products?${params.toString()}`;
+    if (categoryId == null && manufacturerId == null) {
+        url = '/api/products';
+    } else {
+        url = `/api/products?${params.toString()}`;
+    }
 
-    console.log(url);
     let response = await fetch(url);
     return await response.json();
 }
@@ -115,7 +118,7 @@ async function buildTable() {
 
     let options = await getOptions(manufacturerId);
     let products = await getProducts(categoryId, manufacturerId);
-
     let columns = await getTableColumns(options);
+
     createTable(columns, products);
 }
