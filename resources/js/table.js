@@ -31,13 +31,16 @@ async function getOptions(manufacturerId = null) {
 }
 
 async function getProducts(categoryId = null, manufacturerId = null) {
+
+
     const params = new URLSearchParams();
 
     if(categoryId) params.append('category_id', categoryId);
     if(manufacturerId) params.append('manufacturer_id', manufacturerId);
 
     let url = `/api/products?${params.toString()}`;
-    // let url = '/api/products-with-options';
+
+    console.log(url);
     let response = await fetch(url);
     return await response.json();
 }
@@ -71,10 +74,6 @@ function createTable(columns, data) {
     });
 }
 
-function formatProductOptions(products) {
-        return products;
-}
-
 
 async function buildTable() {
     const manufacturerId = document.getElementById('manufacturer_dropdown').value == 'all' ? null : document.getElementById('manufacturer_dropdown').value;
@@ -86,9 +85,7 @@ async function buildTable() {
 
     let options = await getOptions(manufacturerId);
     let products = await getProducts(categoryId, manufacturerId);
-    let formattedProducts = formatProductOptions(products);
-    console.log(formattedProducts);
 
     let columns = getTableColumns(options);
-    createTable(columns, formattedProducts);
+    createTable(columns, products);
 }

@@ -17,14 +17,12 @@ class Product extends Model
     public $timestamps = ['updated_at'];
     protected $guarded = null;
 
-    public static function getTableProducts($category_id = null, $manufacturer_id = null)
+    public static function getTableProducts($category_id, $manufacturer_id)
     {
         $formatted_data = [];
-        $category_id = $category_id == 'all' ? null : $category_id;
-        $manufacturer_id = $manufacturer_id == 'all' ? null : $manufacturer_id;
 
         $query = self::query();
-
+        $query->where('identifier', '<>', null);
         if ($category_id) {
             $query->leftJoin('oc_product_to_category', 'oc_product.product_id', '=', 'oc_product_to_category.product_id')
                 ->where('oc_product_to_category.category_id', $category_id);
@@ -45,10 +43,7 @@ class Product extends Model
                 $temp['quantity'] = $item['quantity'];
 
                 foreach ($item['product_option_values'] as $product_option_value) {
-                        $temp[$product_option_value['description']['name']] = [
-                                'quantity' => $product_option_value['quantity'],
-                                'option_value_id' => $product_option_value['option_value_id']
-                    ];
+                        $temp[$product_option_value['description']['name']] = $product_option_value['quantity'];
                 }
 
                 $temp['identifier'] = $item['identifier'];
