@@ -17,6 +17,47 @@ class Product extends Model
     public $timestamps = ['updated_at'];
     protected $guarded = null;
 
+    public static function getTableProducts($category_id = null, $manufacturer_id = null)
+    {
+        $formatted_data = [];
+        $category_id = $category_id == 'all' ? null : $category_id;
+        $manufacturer_id = $manufacturer_id == 'all' ? null : $manufacturer_id;
+
+        $query = self::query();
+
+        if ($category_id) {
+            $query->leftJoin('oc_product_to_category', 'oc_product.product_id', '=', 'oc_product_to_category.product_id')
+                ->where('oc_product_to_category.category_id', $category_id);
+        }
+
+        if ($manufacturer_id) {
+            $query->where('manufacturer_id', $manufacturer_id);
+        }
+
+        $result = $query->with(['description', 'productOptionValues.description'])
+            ->get()
+            ->toArray();
+
+        foreach ($result as $item) {
+                $temp = [];
+                $temp['id'] = $item['product_id'];
+                $temp['name'] = $item['description']['name'];
+                $temp['quantity'] = $item['quantity'];
+
+                foreach ($item['product_option_values'] as $product_option_value) {
+                        $temp[$product_option_value['description']['name']] = [
+                                'quantity' => $product_option_value['quantity'],
+                                'option_value_id' => $product_option_value['option_value_id']
+                    ];
+                }
+
+                $temp['identifier'] = $item['identifier'];
+                $formatted_data[] = $temp;
+        }
+
+        return $formatted_data;
+    }
+
     public static function getActiveProducts($category_id = null, $manufacturer_id = null)
     {
 
@@ -24,20 +65,50 @@ class Product extends Model
         $manufacturer_id = $manufacturer_id == 'all' ? null : $manufacturer_id;
 
         $query = self::query()
-            ->select('oc_product.product_id as id', 'quantity', 'identifier', 'name');
+            ->select('oc_product.product_id as id', 'quantity', 'identifier', 'oc_product_description.name as name');
 
         if ($category_id) {
             $query->leftJoin('oc_product_to_category', 'oc_product.product_id', '=', 'oc_product_to_category.product_id')
                 ->where('oc_product_to_category.category_id', $category_id);
         }
+
+        if ($manufacturer_id) {
+            $query->where('manufacturer_id', $manufacturer_id);
+        }
+
         $query->leftJoin('oc_product_description', 'oc_product.product_id', '=', 'oc_product_description.product_id')
-            ->where('oc_product_description.language_id', 1)
-            ->when($manufacturer_id, function ($query) use ($manufacturer_id) {
-                return $query->where('manufacturer_id', $manufacturer_id);
-            });
+            ->where('oc_product_description.language_id', 1);
 
 
         $products = $query->get()->toArray();
+
+         dd($products);
+
+        return $products;
+    }
+
+    public static function getProductOptionsName($manufacturerId = null)
+    {
+        $products = self::select(
+                'oc_option_value_description.name as option_value_name',
+            )
+            ->when($manufacturerId, function ($query) use ($manufacturerId) {
+                return $query->where('oc_product.manufacturer_id', $manufacturerId);
+            })
+            ->where('oc_option_value_description.language_id', 1)
+            ->leftJoin('oc_product_option', 'oc_product_option.product_id', '=', 'oc_product.product_id')
+            ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
+            ->leftJoin('oc_option_value_description', 'oc_option_value_description.option_value_id', '=', 'oc_product_option_value.option_value_id')
+            // Нужно хуйнуть в опции.
+            ->whereNotIn('oc_option_value_description.name',[0, 6, 7, 8, 13, 19, 26,30, 35, 36, 41, 125, 420, 437, 946])
+            ->distinct()
+            ->get();
+
+        $products->each(function ($product) {
+            $product->option_value_name = (int)$product->option_value_name;
+        });
+
+        $products = $products->pluck('option_value_name')->unique()->sort()->values();
 
         return $products;
     }

@@ -10,11 +10,17 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function tableProducts()
+    {
+
+    }
     public function list(Request $request)
     {
-        $category_id = $request->input('category_id');
-        $manufacturer_id = $request->input('manufacturer_id');
-        return Product::getActiveProducts($category_id, $manufacturer_id);
+        $category_id = $request->query('category_id');
+        $manufacturer_id = $request->query('manufacturer_id');
+//            return Product::getActiveProducts($category_id,$manufacturer_id);
+
+        return Product::getTableProducts($category_id, $manufacturer_id);
     }
 
     public function updateQuantity(string $identifier, int $count)

@@ -1,79 +1,67 @@
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
+import data from "bootstrap/js/src/dom/data.js";
 
 // Делаем Tabulator глобальным, если нужно в Blade
 window.Tabulator = Tabulator;
+window.buildTable  = buildTable ;
 
 let table = null;
 
-// Загружаем товары и создаём таблицу
-async function firstLoadTable() {
-    try {
-        const response = await fetch('/api/products');
-        const data = await response.json();
+['category_dropdown', 'manufacturer_dropdown'].forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+        element.addEventListener('change', buildTable);
+    }
+});
 
-        // колонки для таблицы
-        let columns = getTableColums('general');
+async function getOptions(manufacturerId = null) {
+    let url = '/api/get-table-colums/';
+    if (manufacturerId) {
+        url += manufacturerId;
+    }
 
-        table = createTable(data, columns);
-
-        table.on("cellEdited", function (cell) {
-            const count = cell.getValue();
-            const identifier = cell.getData().identifier;
-
-            const url = `/api/product/${identifier}/${count}`;
-
-            if (!identifier) {
-                alert('Можно редактировать только товары с идентификатором!');
-                return;
-            }
-
-            fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    count: count,
-                    identifier: identifier,
-                }),
-            });
+    let options = await fetch(url)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching options:', error);
+            return [];
         });
 
-        console.log('Таблица создана:', table);
-    } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
-    }
+    return options;
 }
 
-// Меняем данные таблицы при смене фильтров
-function changeTableData() {
-    const categoryElement = document.getElementById('category_dropdown');
-    const manufacturerElement = document.getElementById('manufacturer_dropdown');
+async function getProducts(categoryId = null, manufacturerId = null) {
+    const params = new URLSearchParams();
 
-    if (!categoryElement || !manufacturerElement) return;
+    if(categoryId) params.append('category_id', categoryId);
+    if(manufacturerId) params.append('manufacturer_id', manufacturerId);
 
-    const category_id = categoryElement.value;
-    const manufacturer_id = manufacturerElement.value;
-
-    const url = `/api/products?category_id=${category_id}&manufacturer_id=${manufacturer_id}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            table.setData(data);
-        })
-        .catch(error => console.error('Ошибка при обновлении данных:', error));
-
-    console.log('Выбраны:', category_id, manufacturer_id);
+    let url = `/api/products?${params.toString()}`;
+    // let url = '/api/products-with-options';
+    let response = await fetch(url);
+    return await response.json();
 }
 
-function createTable(data, columns) {
-    if (table) {
-        table.destroy();
-    }
+function getTableColumns(options) {
+    let columns = [
+        { title: "Название", field: "name", width: 250 },
+        { title: "Количество", field: "quantity", width: 100, editor: "number" },
+    ];
 
-    return new Tabulator("#example-table", {
+    options.map(option => {
+        columns.push({
+            title: option.toString(),
+            field: option.toString(),
+        });
+    });
+
+    columns.push({ title: "Идентификатор", field: "identifier", width: 150 });
+
+    return columns;
+}
+
+function createTable(columns, data) {
+    table = new Tabulator("#example-table", {
         data: data,
         index: "id",
         layout: "fitColumns",
@@ -83,34 +71,24 @@ function createTable(data, columns) {
     });
 }
 
-function getTableColums(type) {
-    if (type == 'general') {
-        return [
-            { title: "Название", field: "name" },
-            { title: "Количество", field: "quantity", width: 150, editor: "number" },
-            { title: "Идентификатор", field: "identifier", width: 150 }
-        ];
-    } else if (type == 'options') {
-        return [
-            { title: "Название", field: "name" },
-            { title: "Идентификатор", field: "identifier", width: 150 },
-        ];
-    }
+function formatProductOptions(products) {
+        return products;
 }
 
 
-export function initTabulator() {
+async function buildTable() {
+    const manufacturerId = document.getElementById('manufacturer_dropdown').value == 'all' ? null : document.getElementById('manufacturer_dropdown').value;
+    const categoryId = document.getElementById('category_dropdown').value == 'all' ? null : document.getElementById('category_dropdown').value;
+
     if (table) {
         table.destroy();
     }
 
-    // Навешиваем события на селекты
-    ['category_dropdown', 'manufacturer_dropdown'].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('change', changeTableData);
-        }
-    });
-    // Загружаем товары и создаём таблицу (если не создана)
-    firstLoadTable();
+    let options = await getOptions(manufacturerId);
+    let products = await getProducts(categoryId, manufacturerId);
+    let formattedProducts = formatProductOptions(products);
+    console.log(formattedProducts);
+
+    let columns = getTableColumns(options);
+    createTable(columns, formattedProducts);
 }

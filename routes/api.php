@@ -21,27 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/products', [ProductController::class, 'list']);
-Route::get('/get-table-colums/{manufacturer_id?}', function ($manufacturerId = 37) {
-    $products = Product::select(
-            'oc_option_value_description.name as option_value_name',
-        )
-        ->where('manufacturer_id', $manufacturerId)
-        ->where('oc_option_value_description.language_id', 1)
-        ->leftJoin('oc_product_option', 'oc_product_option.product_id', '=', 'oc_product.product_id')
-        ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
-        ->leftJoin('oc_option_value_description', 'oc_option_value_description.option_value_id', '=', 'oc_product_option_value.option_value_id')
-        ->distinct()
+Route::get('/get-table-colums/{manufacturer_id?}', [Product::class, 'getProductOptionsName']);
 
-        ->get();
-
-    $products->each(function ($product) {
-        $product->option_value_name = (int)$product->option_value_name;
-    });
-
-    $products = $products->pluck('option_value_name')->unique()->sort()->values();
-
-    return response()->json($products);
-});
 Route::put('/product/{identifier}/{count}', [ProductController::class, 'updateQuantity']);
 Route::get('/products-with-options', [ProductController::class, 'productsWithOptions']);
 Route::put('/products-with-options/{productOptionValueId}/{count}', [ProductController::class, 'updateOptionQuantity']);

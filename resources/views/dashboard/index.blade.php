@@ -27,7 +27,7 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        initTabulator();
+        buildTable();
     });
 </script>
 
