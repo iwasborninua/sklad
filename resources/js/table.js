@@ -15,7 +15,7 @@ let table = null;
 });
 
 async function getOptions(manufacturerId = null) {
-    let url = '/api/get-table-columns/';
+    let url = '/api/get-table-columns';
     if (manufacturerId) {
         url += manufacturerId;
     }
