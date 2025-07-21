@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductOptionValue;
 use App\Repo\ProductRepo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -48,5 +49,31 @@ class ProductController extends Controller
         } else {
             return response('', 417);
         }
+    }
+
+    public function updateOption($identifier, $optionName, $value)
+    {
+        $product_option_value_id = DB::connection('es3')
+            ->table('oc_product as p')
+            ->leftJoin('oc_product_option_value as pov', 'pov.product_id', '=', 'p.product_id')
+            ->leftJoin('oc_option_value_description as ovd', function ($join) {
+                $join->on('pov.option_value_id', '=', 'ovd.option_value_id')
+                    ->where('ovd.language_id', 1);
+            })
+            ->where('p.identifier', $identifier)
+            ->where('ovd.name', $optionName)
+            ->select('pov.product_option_value_id')
+            ->first()->product_option_value_id;
+
+
+            $productOptionValue = ProductOptionValue::where('product_option_value_id', $product_option_value_id)->first();
+
+
+            $productOptionValue->quantity = $value;
+            if ($productOptionValue->save()) {
+                return response()->json($productOptionValue, 201);
+            } else {
+                return response('', 417);
+            }
     }
 }

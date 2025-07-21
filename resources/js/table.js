@@ -55,6 +55,7 @@ function getTableColumns(options) {
         columns.push({
             title: option.toString(),
             field: option.toString(),
+            editor: "number",
         });
     });
 
@@ -71,6 +72,35 @@ function createTable(columns, data) {
         pagination: "local",
         paginationSize: 20,
         columns: columns,
+    });
+
+    table.on("cellEdited", function (cell) {
+        const rowData = cell.getData();        // Строка
+        const field = cell.getField();         // Название ячейки, которую редактируем
+        const newValue = cell.getValue();      // Новое значение
+
+        if(field == 'quantity') {
+            axios.put(`/api/product/${rowData.identifier}/${newValue}`)
+                .then(response => {
+                    console.log("Общее количество обновлено успешно", response.data);
+                })
+                .catch(error => {
+                    console.error("Ошибка при обновлении общего количество", error);
+                });
+        } else {
+            axios.put(`/api/option/${rowData.identifier}/${field}/${newValue}`)
+                .then(response => {
+                    console.log("Опция обновленна успешно", response.data);
+                })
+                .catch(error => {
+                    console.error("Ошибка при обновлении опции", error);
+                });
+        }
+
+        // console.log("Изменено поле:", field);
+        // console.log("Новое значение:", newValue);
+        // console.log("Вся строка:", rowData);
+        // console.log(rowData.identifier);
     });
 }
 

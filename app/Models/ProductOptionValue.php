@@ -12,6 +12,8 @@ class ProductOptionValue extends Model
     public $timestamps = false;
     protected $guarded = null;
 
+    protected $connection = 'es3';
+
     public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
