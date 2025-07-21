@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\dashboard\DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -40,5 +40,5 @@ Route::group(function () {
             })->name('manufacturers');
         });
     });
-})->middleware('auth');
+});
 
