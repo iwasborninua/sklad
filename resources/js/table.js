@@ -15,7 +15,7 @@ let table = null;
 });
 
 async function getOptions(manufacturerId = null) {
-    let url = '/api/get-table-colums/';
+    let url = '/api/get-table-columns/';
     if (manufacturerId) {
         url += manufacturerId;
     }
@@ -45,7 +45,7 @@ async function getProducts(categoryId = null, manufacturerId = null) {
     return await response.json();
 }
 
-function getTableColumns(options) {
+async function getTableColumns(options) {
     let columns = [
         { title: "Название", field: "name", width: 250 },
         { title: "Количество", field: "quantity", width: 100, editor: "number" },
@@ -116,6 +116,6 @@ async function buildTable() {
     let options = await getOptions(manufacturerId);
     let products = await getProducts(categoryId, manufacturerId);
 
-    let columns = getTableColumns(options);
+    let columns = await getTableColumns(options);
     createTable(columns, products);
 }
