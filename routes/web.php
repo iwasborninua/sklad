@@ -20,22 +20,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [\App\Http\Controllers\dashboard\DashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\dashboard\DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::name('partial.')->prefix('partials')->group(function () {
-    Route::name('settings.')->prefix('settings')->group(function () {
-        Route::get('categories', function () {
-            return view('partials.settings.categories', [
-                'categories' => \App\Models\Sklad\CategorysSettings::getCategorysSettingsList(),
-            ]);
-        })->name('categories');
+    Route::name('partial.')->prefix('partials')->group(function () {
+        Route::name('settings.')->prefix('settings')->group(function () {
+            Route::get('categories', function () {
+                return view('partials.settings.categories', [
+                    'categories' => \App\Models\Sklad\CategorysSettings::getCategorysSettingsList(),
+                ]);
+            })->name('categories');
 
-        Route::get('manufacturers', function () {
-            return view('partials.settings.manufacturers', [
-                'manufacturers' => \App\Models\Sklad\ManufacturersSettings::getManufacturersSettingsList(),
-            ]);
-        })->name('manufacturers');
+            Route::get('manufacturers', function () {
+                return view('partials.settings.manufacturers', [
+                    'manufacturers' => \App\Models\Sklad\ManufacturersSettings::getManufacturersSettingsList(),
+                ]);
+            })->name('manufacturers');
+        });
     });
-});
+})->middleware('auth');
+
