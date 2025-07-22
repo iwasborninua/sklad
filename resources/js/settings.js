@@ -8,7 +8,7 @@ export function updateNanufacturersSettings() {
             let manufacturerId = this.getAttribute('id');
             let active = this.checked === true ? 1 : 0;
 
-            axios.post(`/api/settings/update/manufacturers/`, {
+            axios.post(`/api/settings/update/manufacturers`, {
                 manufacturer_id: manufacturerId,
                 active: active,
             }).then(response => {
@@ -31,7 +31,7 @@ export function updateCategoriesSettings() {
             let categoryId = this.getAttribute('id');
             let active = this.checked === true ? 1 : 0;
 
-            axios.post(`/api/settings/update/categories/`, {
+            axios.post(`/api/settings/update/categories`, {
                 category_id: categoryId,
                 active: active,
             }).then(response => {
