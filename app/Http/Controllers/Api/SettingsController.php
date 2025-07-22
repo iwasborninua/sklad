@@ -12,12 +12,30 @@ use function PHPUnit\Framework\isEmpty;
 
 class SettingsController extends Controller
 {
+    /*
+     * Поскольку на open cart почистить старые категории нам в падлу,
+     * мне дали эту бредовую задачу
+     *
+     * */
+    private function getUnnecessaryManufacturers()
+    {
+        return [12,13,16,17,19,20,21,24,26,27,29,30,40,41,42,43,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,80,81];
+    }
+
+    /*
+     * то же самое, что и для getUnnecessaryManufacturers
+     *
+     * */
+    private function getUnnecessaryCategories()
+    {
+        return [59, 60, 62, 63, 82, 97, 98, 99, 100, 101, 106, 107, 124, 127, 130, 173, 174, 178, 179, 180, 181, 182, 183, 184, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 207, 208, 209, 210, 211, 212, 214, 215, 219, 222, 224, 226, 228, 230, 234, 236, 237, 239, 240, 242, 244, 247, 248, 249, 250, 251, 252, 253, 254, 273, 278, 279, 280, 281, 2646, 2647, 2648, 2650, 2668, 2669, 2670];
+    }
     public function syncManufacturers()
     {
         // Получаем все manufacturer_id из ManufacturersSettings
 
         $settings_manufacturers = ManufacturersSettings::select('manufacturer_id')->get();
-        $manufacturers_ids = $settings_manufacturers->pluck('manufacturer_id')->toArray();
+        $manufacturers_ids = array_merge($settings_manufacturers->pluck('manufacturer_id')->toArray(), $this->getUnnecessaryManufacturers());
 
         $manufacturers = Manufacturer::select('manufacturer_id', 'name')
             ->whereNotIn('manufacturer_id', $manufacturers_ids)
@@ -43,9 +61,9 @@ class SettingsController extends Controller
     public function syncCategories(Request $request)
     {
         $settings_categories = CategorysSettings::select('category_id')->get();
-        $settings_ids = $settings_categories->pluck('category_id')->toArray();
+        $settings_ids = array_merge($settings_categories->pluck('category_id')->toArray(), $this->getUnnecessaryCategories());
 
-        $es2 = Category::from('oc_category as c')
+        $categorys = Category::from('oc_category as c')
                 ->select('c.category_id', 'ocd.name')
                 ->whereNotIn('c.category_id', $settings_ids)
                 ->where('c.status', 1)
@@ -55,10 +73,10 @@ class SettingsController extends Controller
                 ->toArray();
 
 
-        if (count($es2) === 0) {
+        if (count($categorys) === 0) {
             return response()->json(['message' => 'Нечего синхронизировать'], 200);
         } else {
-            foreach ($es2 as $category) {
+            foreach ($categorys as $category) {
                 CategorysSettings::create([
                     'category_id' => $category['category_id'],
                     'name' => $category['name'],
