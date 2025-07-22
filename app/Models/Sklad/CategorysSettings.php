@@ -19,6 +19,6 @@ class CategorysSettings extends Model
 
     public static function getCategorysSettingsList()
     {
-        return self::select('id', 'category_id', 'name', 'active')->get();
+        return self::select('id', 'category_id', 'name', 'active')->orderBy('name')->get();
     }
 }

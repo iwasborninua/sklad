@@ -19,9 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/protocol', function () {
-    dd(request()->secure(), request()->getScheme(), url('/'));
-});
 
 Route::get('/products', [ProductController::class, 'list']);
 Route::get('/get-table-columns/{manufacturer_id?}', [Product::class, 'getProductOptionsName']);

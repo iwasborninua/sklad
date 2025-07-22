@@ -19,6 +19,6 @@ class ManufacturersSettings extends Model
 
     public static function getManufacturersSettingsList()
     {
-        return self::select('id', 'manufacturer_id', 'name', 'active')->get();
+        return self::select('id', 'manufacturer_id', 'name', 'active')->orderBy('name')->get();
     }
 }
