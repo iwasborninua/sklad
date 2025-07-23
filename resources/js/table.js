@@ -73,7 +73,7 @@ function createTable(columns, data) {
         index: "id",
         layout: "fitColumns",
         pagination: "local",
-        paginationSize: 20,
+        paginationSize: 100,
         columns: columns,
     });
 
@@ -81,6 +81,7 @@ function createTable(columns, data) {
         const rowData = cell.getData();        // Строка
         const field = cell.getField();         // Название ячейки, которую редактируем
         const newValue = cell.getValue();      // Новое значение
+        const oldValue = cell.getOldValue();      // Старое значение
 
         if(field == 'quantity') {
             axios.put(`/api/product/${rowData.identifier}/${newValue}`)
@@ -91,13 +92,19 @@ function createTable(columns, data) {
                     console.error("Ошибка при обновлении общего количество", error);
                 });
         } else {
-            axios.put(`/api/option/${rowData.identifier}/${field}/${newValue}`)
-                .then(response => {
-                    console.log("Опция обновленна успешно", response.data);
-                })
-                .catch(error => {
-                    console.error("Ошибка при обновлении опции", error);
-                });
+            if (oldValue === undefined) {
+                alert("Вы можеТе редактировать только существующие опции товара. Пожалуйста, добавьте опцию в админке errors-seeds.com.ua");
+                cell.setValue(oldValue); // <-- ключевая строка
+                return;
+            } else  if (newValue != undefined){
+                axios.put(`/api/option/${rowData.identifier}/${field}/${newValue}`)
+                    .then(response => {
+                        console.log("Опция обновленна успешно", response.data);
+                    })
+                    .catch(error => {
+                        console.error("Ошибка при обновлении опции", error);
+                    });
+            }
         }
 
         // console.log("Изменено поле:", field);
