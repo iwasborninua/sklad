@@ -37,5 +37,6 @@ Route::name('settings.')->prefix('settings')->group(function () {
     Route::name('update.')->prefix('update')->group(function () {
         Route::post('manufacturers', [\App\Http\Controllers\Api\SettingsController::class, 'updateManufacturers'])->name('manufacturers');
         Route::post('categories', [\App\Http\Controllers\Api\SettingsController::class, 'updateCategories'])->name('categories');
+        Route::post('options', [\App\Http\Controllers\Api\SettingsController::class, 'updateOptions'])->name('options');
     });
 });

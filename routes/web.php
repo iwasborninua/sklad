@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\dashboard\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
                     'manufacturers' => \App\Models\Sklad\ManufacturersSettings::getManufacturersSettingsList(),
                 ]);
             })->name('manufacturers');
+
+            Route::get('options', [SettingsController::class, 'options'])->name('options');
         });
     });
 });

@@ -12,6 +12,11 @@
                     Категории
                 </a>
             </h5>
+            <h5 class="my-3 mx-3">
+                <a href="{{ route('partial.settings.options') }}" class="text-decoration-none text-uppercase settings-link">
+                    Опции
+                </a>
+            </h5>
         </div>
         <div id="dynamic-setting-section" class="col-10 my-3">
             <p>На данной странице вы можете управлять настройками склада.</p>
@@ -23,6 +28,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const links = document.querySelectorAll('.settings-link');
+        console.log(links);
 
         links.forEach(function(link) {
             link.addEventListener('click', function(event) {

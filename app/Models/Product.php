@@ -95,7 +95,7 @@ class Product extends Model
             ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
             ->leftJoin('oc_option_value_description', 'oc_option_value_description.option_value_id', '=', 'oc_product_option_value.option_value_id')
             // Нужно хуйнуть в опции.
-            ->whereNotIn('oc_option_value_description.name',[0, 6, 7, 8, 13, 19, 26,30, 35, 36, 41, 125, 420, 437, 946])
+            ->whereNotIn('oc_option_value_description.name',[0, 6, 7, 8, 13, 19, 26, 30, 35, 36, 41, 125, 420, 437, 946])
             ->distinct()
             ->get();
 
@@ -104,6 +104,26 @@ class Product extends Model
         });
 
         $products = $products->pluck('option_value_name')->unique()->sort()->values();
+
+        return $products;
+    }
+
+
+    public static function getAllProductsOptions($names)
+    {
+        $products = self::select(
+//            'oc_option_value_description.name as option_value_name',
+            'oc_option_value_description.*'
+        )
+            ->where('oc_option_value_description.language_id', 1)
+            ->where('oc_option_value_description.option_id', 13)  // отсееваем ненужные опции
+            ->whereNotIn('oc_option_value_description.name', $names) // исключаем опции, которые не нужны
+            ->leftJoin('oc_product_option', 'oc_product_option.product_id', '=', 'oc_product.product_id')
+            ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
+            ->leftJoin('oc_option_value_description', 'oc_option_value_description.option_value_id', '=', 'oc_product_option_value.option_value_id')
+            ->distinct()
+            ->orderBy('oc_option_value_description.name', 'asc')
+            ->get();
 
         return $products;
     }

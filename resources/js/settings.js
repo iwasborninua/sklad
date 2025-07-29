@@ -44,3 +44,20 @@ export function updateCategoriesSettings() {
         });
     });
 }
+
+export function updateOptionsSettings(checkbox) {
+    let optionId = checkbox.getAttribute('id');
+    let active = checkbox.checked === true ? 1 : 0;
+
+
+    axios.post(`/api/settings/update/options`, {
+        option_id: optionId,
+        active: active,
+    }).then(response => {
+        console.log(response.data);
+    })
+        .catch(function (error) {
+        // Обработка ошибки
+        console.error(`Ошибка при запросе обновления настроек для опции ${optionId}:`, error);
+    })
+}

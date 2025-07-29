@@ -132,4 +132,24 @@ class SettingsController extends Controller
             return response()->json(['message' => 'Ошибка при обновлении категории'], 500);
         }
     }
+
+    public function updateOptions(Request $request)
+    {
+        $option_id = $request->input('option_id');
+        $active = (int)$request->input('active');
+
+        $option = \App\Models\Sklad\OptionsSettings::where('option_id', $option_id)->first();
+
+        if (!$option) {
+            return response()->json(['message' => 'Опция не найдена'], 404);
+        }
+
+        $option->active = $active;
+
+        if ($option->save()) {
+            return response()->json(['message' => 'Опция обновлена успешно'], 200);
+        } else {
+            return response()->json(['message' => 'Ошибка при обновлении опции'], 500);
+        }
+    }
 }
