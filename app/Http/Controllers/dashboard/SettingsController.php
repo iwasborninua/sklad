@@ -17,9 +17,9 @@ class SettingsController extends Controller
 
     public function options()
     {
+        // Берем все настройки опций из базы склада
         $options = OptionsSettings::select('option_id', 'name')
             ->get();
-
 
         $product_options = Product::getAllProductsOptions($options->pluck('name')->toArray());
 

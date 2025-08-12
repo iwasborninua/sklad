@@ -17,7 +17,7 @@ let table = null;
 async function getOptions(manufacturerId = null) {
     let url = '/api/get-table-columns';
     if (manufacturerId) {
-        url += manufacturerId;
+        url += '/{manufacturerId}';
     }
 
     let options = await fetch(url)

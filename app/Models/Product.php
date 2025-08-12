@@ -116,7 +116,7 @@ class Product extends Model
             'oc_option_value_description.*'
         )
             ->where('oc_option_value_description.language_id', 1)
-            ->where('oc_option_value_description.option_id', 13)  // отсееваем ненужные опции
+//            ->where('oc_option_value_description.option_id', 13) // если нужно фильтровать по типу опции, раскомментируй эту строку
             ->whereNotIn('oc_option_value_description.name', $names) // исключаем опции, которые не нужны
             ->leftJoin('oc_product_option', 'oc_product_option.product_id', '=', 'oc_product.product_id')
             ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
