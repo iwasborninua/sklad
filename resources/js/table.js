@@ -75,6 +75,7 @@ function createTable(columns, data) {
         pagination: "local",
         paginationSize: 100,
         columns: columns,
+        nestedFieldSeparator: false
     });
 
     table.on("cellEdited", function (cell) {
@@ -106,11 +107,6 @@ function createTable(columns, data) {
                     });
             }
         }
-
-        // console.log("Изменено поле:", field);
-        // console.log("Новое значение:", newValue);
-        // console.log("Вся строка:", rowData);
-        // console.log(rowData.identifier);
     });
 }
 
