@@ -5,7 +5,7 @@ namespace App\Http\Controllers\dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductOption;
-use App\Models\sklad\OptionsSettings;
+use App\Models\Sklad\OptionsSettings;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
