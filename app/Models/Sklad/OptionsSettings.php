@@ -15,7 +15,12 @@ class OptionsSettings extends Model
         'active'
     ];
 
-
+    public static function getActiveOptionsIds()
+    {
+        return self::where('active', 1)
+            ->pluck('option_id')
+            ->toArray();
+    }
     public static function setNewOptions($options)
     {
         foreach ($options as $option) {

@@ -84,6 +84,8 @@ class Product extends Model
 
     public static function getProductOptionsName($manufacturerId = null)
     {
+        $settingsOptionsIds = \App\Models\Sklad\OptionsSettings::getActiveOptionsIds();
+
         $products = self::select(
                 'oc_option_value_description.name as option_value_name',
             )
@@ -95,12 +97,13 @@ class Product extends Model
             ->leftJoin('oc_product_option_value', 'oc_product_option_value.product_option_id', '=', 'oc_product_option.product_option_id')
             ->leftJoin('oc_option_value_description', 'oc_option_value_description.option_value_id', '=', 'oc_product_option_value.option_value_id')
             // Нужно хуйнуть в опции.
-            ->whereNotIn('oc_option_value_description.name',[0, 6, 7, 8, 13, 19, 26, 30, 35, 36, 41, 125, 420, 437, 946])
+//            ->whereNotIn('oc_option_value_description.name',[0, 6, 7, 8, 13, 19, 26, 30, 35, 36, 41, 125, 420, 437, 946])
+            ->whereIn('oc_product_option_value.option_value_id', $settingsOptionsIds)
             ->distinct()
             ->get();
 
         $products->each(function ($product) {
-            $product->option_value_name = (int)$product->option_value_name;
+            $product->option_value_name = $product->option_value_name;
         });
 
         $products = $products->pluck('option_value_name')->unique()->sort()->values();
