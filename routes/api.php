@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/products', [ProductController::class, 'list']);
-Route::get('/get-table-columns/{manufacturer_id?}', [Product::class, 'getProductOptionsName']);
+Route::get('/get-table-columns/{manufacturer_id?}/{category_id?}', [Product::class, 'getProductOptionsName']);
 Route::put('/option/{identifier}/{optionName}/{value}', [ProductController::class, 'updateOption']);
 
 Route::put('/product/{identifier}/{count}', [ProductController::class, 'updateQuantity']);
