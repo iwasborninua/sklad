@@ -27,6 +27,7 @@ class MonitoringController extends Controller
             'cannabis-outdoor.net',
             'cannabis-indoor.net',
             'jahstrains.com',
+            'cannagrowing.net'
         ];
 
         return view('dashboard.monitoring' , compact('resources'));
