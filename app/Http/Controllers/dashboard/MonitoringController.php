@@ -27,7 +27,14 @@ class MonitoringController extends Controller
             'cannabis-outdoor.net',
             'cannabis-indoor.net',
             'jahstrains.com',
-            'cannagrowing.net'
+            'cannagrowing.net',
+            'mushrooms-shop.com.ua',
+            'error-seed.info',
+            'errorsseeds-kz.com',
+            'growmarket.com.ua',
+            'errorsseeds-ge.com',
+            'jahstraints.com',
+            'carpathians-seeds.com'
         ];
 
         return view('dashboard.monitoring' , compact('resources'));
