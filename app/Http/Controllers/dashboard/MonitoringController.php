@@ -29,11 +29,11 @@ class MonitoringController extends Controller
             'jahstrains.com',
             'cannagrowing.net',
             'mushrooms-shop.com.ua',
-            'error-seed.info',
+            'errors-seeds.info',
             'errorsseeds-kz.com',
             'growmarket.com.ua',
             'errorsseeds-ge.com',
-            'jahstraints.com',
+            'jahstrains.com',
             'carpathians-seeds.com'
         ];
 

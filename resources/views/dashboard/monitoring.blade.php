@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h4 class="my-3 text-center">Эта секция проверяет доступность наших ресурсов на основе котодов ответов HTTP</h4>
+    <h4 class="my-3 text-center">Проверяем работу наших ресурсов на основе HTTP ответов</h4>
     <div class="row">
         @foreach($resources as $resource)
             <section class="col-6">
