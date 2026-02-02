@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('site_search', function (Blueprint $table) {
             $table->id();
-            $table->string('site', '30');
+            $table->string('site', '30')->nullable();
             $table->string('search', '30');
             $table->timestamps();
         });
