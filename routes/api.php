@@ -40,3 +40,11 @@ Route::name('settings.')->prefix('settings')->group(function () {
         Route::post('options', [\App\Http\Controllers\Api\SettingsController::class, 'updateOptions'])->name('options');
     });
 });
+
+
+Route::name('statistic.')->prefix('statistic')->group(function () {
+    Route::name('search.')->prefix('search')->group(function () {
+        Route::post('store', [\App\Http\Controllers\Api\StatisticController::class, 'store'])->name('store');
+        Route::post('show', [\App\Http\Controllers\Api\StatisticController::class, 'show'])->name('show');
+    });
+});

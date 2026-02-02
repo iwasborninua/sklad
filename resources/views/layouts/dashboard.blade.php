@@ -28,8 +28,12 @@
                     Настройки
                 </a>
 
-                <a href="{{ route('dashboard.monitoring') }}">
+                <a href="{{ route('dashboard.monitoring') }}" class="me-3">
                     Мониторинг
+                </a>
+
+                <a href="{{ route('dashboard.statistic') }}" class="me-3">
+                    Статистика
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

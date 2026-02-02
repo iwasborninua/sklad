@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');
     Route::get('/dashboard/monitoring', [\App\Http\Controllers\dashboard\MonitoringController::class, 'index'])->name('dashboard.monitoring');
     Route::get('/dashboard/check', [\App\Http\Controllers\dashboard\MonitoringController::class, 'check'])->name('dashboard.check');
+    Route::get('/dashboard/statistic', [\App\Http\Controllers\dashboard\StatisticsController::class, 'index'])->name('dashboard.statistic');
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
