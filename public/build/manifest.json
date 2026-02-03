@@ -1,9 +1,16 @@
 {
+  "resources/icons/calendar.svg": {
+    "file": "assets/calendar-D6LAQYzZ.svg",
+    "src": "resources/icons/calendar.svg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-C8YsGl2k.js",
+    "file": "assets/app-BReNhkTU.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "assets/app-CksuuEqD.css"
+    ]
   },
   "resources/sass/app.scss": {
     "file": "assets/app--VJpODVA.css",
