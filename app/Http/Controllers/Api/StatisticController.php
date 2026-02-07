@@ -45,7 +45,7 @@ class StatisticController extends Controller
         foreach ($data as $item) {
             $clearData[] = [
                 'search' => $item->search,
-                'count' => round(($item->count / $totalCount) * 100, 2),
+                'count' => $item->count,
             ];
         }
 
