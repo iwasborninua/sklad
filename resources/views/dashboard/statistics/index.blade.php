@@ -62,7 +62,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Тег</th>
-                                    <th scope="col">%</th>
+                                    <th scope="col">Количество</th>
                                 </tr>
                                 </thead>
                                 <tbody>
