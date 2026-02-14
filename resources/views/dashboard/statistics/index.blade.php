@@ -25,6 +25,7 @@
                                     name="date_from"
                                     placeholder="from"
                                     id="search_from"
+                                    value=""
                                 >
                             </div>
                         </div>
@@ -40,8 +41,9 @@
                                     type="text"
                                     class="form-control datepicker site-search"
                                     name="date_to"
-                                    placeholder="from"
+                                    placeholder="to"
                                     id="search_to"
+                                    value=""
                                 >
                             </div>
                         </div>
@@ -52,6 +54,9 @@
                                 <option value="25">25</option>
                                 <option value="50">50</option>
                             </select>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-success disabled" id="export_pdf">Экспорт в PDF</button>
                         </div>
                     </div>
 
@@ -77,6 +82,9 @@
     </div>
 
     <script>
+
+        let pdf_button = document.getElementById('export_pdf');
+
         document.querySelectorAll('.site-search').forEach(el => {
             el.addEventListener('change', handler);
         });
@@ -87,6 +95,8 @@
             let to = document.getElementById('search_to').value;
 
             if (from && to != "" ) {
+                pdf_button.classList.remove('disabled');
+
                 const res = await fetch('/api/statistic/search/show', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -105,6 +115,8 @@
                 const data = await res.json(); // получаем все это говно
 
                 renderTable(data);
+            } else {
+                pdf_button.classList.add('disabled');
             }
         }
 
@@ -138,6 +150,38 @@
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", '&#039;');
         }
+
+        document.getElementById('export_pdf').addEventListener('click', async () => {
+            const from  = document.getElementById('search_from').value;
+            const to    = document.getElementById('search_to').value;
+            const limit = document.getElementById('search_select').value ?? 50;
+
+            if (!from || !to) return alert('Выберите период');
+
+            const res = await fetch('/api/statistic/search/export/pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ from, to, limit }),
+            });
+
+            if (!res.ok) return alert('Ошибка экспорта PDF');
+
+            const blob = await res.blob();
+
+            let filename = 'export.pdf';
+            const cd = res.headers.get('content-disposition');
+            const m = cd && cd.match(/filename="?(.*?)"?$/i);
+            if (m?.[1]) filename = m[1];
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
     </script>
 
 @endsection

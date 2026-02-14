@@ -44,6 +44,10 @@ Route::name('settings.')->prefix('settings')->group(function () {
 
 Route::name('statistic.')->prefix('statistic')->group(function () {
     Route::name('search.')->prefix('search')->group(function () {
+        Route::name('export.')->prefix('export')->group(function () {
+           Route::post('pdf', [\App\Http\Controllers\Api\StatisticController::class, 'pdf'])->name('pdf');
+        });
+
         Route::post('store', [\App\Http\Controllers\Api\StatisticController::class, 'store'])->name('store');
         Route::post('show', [\App\Http\Controllers\Api\StatisticController::class, 'show'])->name('show');
     });
