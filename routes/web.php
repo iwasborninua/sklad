@@ -21,6 +21,8 @@ Route::get('/', function () {
     return redirect('dashboard');
 });
 
+Route::middleware('auth-with-keyword')->get('/dashboard/check-ext',  [\App\Http\Controllers\dashboard\MonitoringController::class, 'check']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\dashboard\DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/settings', [\App\Http\Controllers\dashboard\SettingsController::class, 'index'])->name('dashboard.settings');

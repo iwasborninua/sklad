@@ -112,4 +112,5 @@ return [
 
     'password_timeout' => 10800,
 
+    'keyword' => env('AUTH_WITH_KEYWORD_KEY')
 ];
