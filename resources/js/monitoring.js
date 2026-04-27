@@ -1,7 +1,7 @@
 import axios from "axios";
 import data from "bootstrap/js/src/dom/data.js";
 
-window.domainCheck = async function domainCheck(resources) {
+window.domainCheck = async function domainCheck() {
     axios.get('/dashboard/check')
         .then(response => {
             response.data.forEach(domain => {

@@ -18,8 +18,7 @@
 @endsection
 
 <script>
-    const resources = @json($resources);
     document.addEventListener('DOMContentLoaded', function() {
-        domainCheck(resources);
+        domainCheck();
     });
 </script>
