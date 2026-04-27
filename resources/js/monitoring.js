@@ -1,18 +1,28 @@
 import axios from "axios";
-import data from "bootstrap/js/src/dom/data.js";
 
 window.domainCheck = async function domainCheck() {
     axios.get('/dashboard/check')
         .then(response => {
-            response.data.forEach(domain => {
-                if (domain['http_code'] == 200) {
-                    document.getElementById(domain['domain']).classList.add('bg-success')
-                } else {
-                    document.getElementById(domain['domain']).classList.add('bg-danger')
+            const domains = Object.values(response.data);
+
+            domains.forEach(domain => {
+                const element = document.getElementById(domain.domain);
+
+                if (!element) {
+                    console.warn('Element not found:', domain.domain);
+                    return;
                 }
-            })
+
+                element.classList.remove('bg-success', 'bg-danger', 'bg-warning');
+
+                if (domain.http_code === 200) {
+                    element.classList.add('bg-success');
+                } else {
+                    element.classList.add('bg-danger');
+                }
+            });
         })
         .catch(error => {
-            console.log(error)
-    })
+            console.log(error);
+        });
 };
