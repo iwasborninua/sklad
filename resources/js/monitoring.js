@@ -1,22 +1,18 @@
 import axios from "axios";
+import data from "bootstrap/js/src/dom/data.js";
 
 window.domainCheck = async function domainCheck(resources) {
-    resources.forEach(domain => {
-        axios.get('/dashboard/check', { params: { domain: domain } })
-            .then(response => {
-                console.log(domain, response.data);
-                let element = document.getElementById(domain);
-                let status = element.querySelector('.status-code');
-                status.textContent = response.data.statusCode;
-                element.classList.add(response.data.class);
+    axios.get('/dashboard/check')
+        .then(response => {
+            response.data.forEach(domain => {
+                if (domain['http_code'] == 200) {
+                    document.getElementById(domain['domain']).classList.add('bg-success')
+                } else {
+                    document.getElementById(domain['domain']).classList.add('bg-danger')
+                }
             })
-            .catch(error => {
-                console.log('ошибОЧКА: ' + domain);
-                let element = document.getElementById(domain);
-                let status = element.querySelector('.status-code');
-                status.textContent = 'Запрос не удался';
-                element.classList.add('bg-warning');
-                // console.error('Error checking domain:', domain, error);
-            });
-    });
+        })
+        .catch(error => {
+            console.log(error)
+    })
 };

@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use \Illuminate\Support\Facades\Http;
-use Symfony\Component\DomCrawler\Crawler;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Response;
+use Throwable;
 
 class MonitoringController extends Controller
 {
-    public function index()
+    public function getResources()
     {
-        $resources = [
-            'errorsseeds-mail.com',
+        return $resources = [
             'medcannabis.info',
             'ruhemp.com',
             'co-semena.info',
@@ -33,35 +32,86 @@ class MonitoringController extends Controller
             'errorsseeds-kz.com',
             'growmarket.com.ua',
             'errorsseeds-ge.com',
-            'jahstrains.com',
             'carpathians-seeds.com'
         ];
+    }
+
+    public function index()
+    {
+        $resources = $this->getResources();
 
         return view('dashboard.monitoring' , compact('resources'));
     }
 
-    public function check(Request $request)
+    public function check()
     {
-        $domain = $request->input('domain');
+        $resources = $this->getResources();
 
-        $promise = Http::async()->get("https://$domain");
+        $responses = Http::pool(function ($pool) use ($resources) {
+            $requests = [];
 
-        try {
-            $response = $promise->wait();
-            $statusCode = $response->status();
-        } catch (\Exception $e) {
-            return response()->json([
+            foreach ($resources as $domain) {
+                $requests[$domain] = $pool
+                    ->as($domain)
+                    ->timeout(5)
+                    ->connectTimeout(2)
+                    ->withOptions([
+                        'allow_redirects' => true,
+                        'verify' => false,
+                    ])
+                    ->get('https://' . $domain);
+            }
+
+            return $requests;
+        });
+
+        $result = [];
+
+        foreach ($resources as $domain) {
+            $response = $responses[$domain] ?? null;
+
+            /**
+             * Успешный HTTP-ответ Laravel
+             */
+            if ($response instanceof Response) {
+                $result[] = [
+                    'domain' => $domain,
+                    'url' => 'https://' . $domain,
+                    'status' => $response->successful() ? 'ok' : 'bad',
+                    'http_code' => $response->status(),
+                    'message' => null,
+                ];
+
+                continue;
+            }
+
+            /**
+             * Ошибка подключения: DNS, timeout, SSL, connection refused и т.д.
+             */
+            if ($response instanceof Throwable) {
+                $result[] = [
+                    'domain' => $domain,
+                    'url' => 'https://' . $domain,
+                    'status' => 'error',
+                    'http_code' => null,
+                    'message' => $response->getMessage(),
+                ];
+
+                continue;
+            }
+
+            /**
+             * На всякий случай, если пришло что-то неожиданное
+             */
+            $result[] = [
+                'domain' => $domain,
+                'url' => 'https://' . $domain,
                 'status' => 'error',
-                'message' => 'Error: ' . $e->getMessage(),
-                'statusCode' => 0,
-            ]);
+                'http_code' => null,
+                'message' => 'Unknown response type',
+            ];
         }
 
-        $formatted_response = [
-            'statusCode' => $statusCode,
-            'class' => ($statusCode >= 200 && $statusCode < 300) ? 'bg-success' : (($statusCode >= 300 && $statusCode < 400) ? 'bg-warning' : 'bg-danger'),
-        ];
-
-        return response()->json($formatted_response);
+        return response()->json($result);
     }
 }
