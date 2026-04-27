@@ -12,5 +12,6 @@ class AuthWithKeywordMiddleware
         if ($request->get('keyword') === config('auth.keyword')){
             return $next($request);
         }
+        abort(403);
     }
 }
