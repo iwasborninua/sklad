@@ -43,7 +43,9 @@ class Product extends Model
                 $temp['quantity'] = $item['quantity'];
 
                 foreach ($item['product_option_values'] as $product_option_value) {
+                    if (isset($product_option_value['description']['name'])){
                         $temp[$product_option_value['description']['name']] = $product_option_value['quantity'];
+                    }
                 }
 
                 $temp['identifier'] = $item['identifier'];
